@@ -1,0 +1,39 @@
+name: Deployment Exercise
+on: push 
+jobs:
+    Get_code:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get code
+              uses: actions/checkout@v6
+    
+    install_dependencies:
+        runs-on: ubuntu-latest
+        needs: Get_code
+        steps:
+            - name: Install dependencies
+              run: npm ci
+    lint:
+        runs-on: ubuntu-latest
+        needs: install_dependencies
+        steps:
+            - name: Lint
+              run: npm run lint
+    test:
+        runs-on: ubuntu-latest
+        needs: lint
+        steps:
+            - name: Test
+              run: npm test
+    build:
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+            - name: Build Code
+              run: npm run build
+    deploy:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Deploy
+              run: echo "Deploying to production server..."
